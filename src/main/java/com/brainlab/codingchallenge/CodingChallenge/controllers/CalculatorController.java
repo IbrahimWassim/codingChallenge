@@ -19,7 +19,6 @@ public class CalculatorController  {
     CalculatorService calculatorService;
     @RequestMapping(value = "/add", method = RequestMethod.GET, produces = "application/json")
     public String add(@RequestParam("operands") String operands) throws InconvertibleToNumberException {
-        System.out.println(operands);
         return calculatorService.calculateSum(operands);
     }
 }

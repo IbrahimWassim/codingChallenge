@@ -89,7 +89,6 @@ public class SumCalculator {
             BigInteger sum= BigInteger.valueOf(0);
             for (int i = base10SumArray.length - 1; i >= 0; i--) {
                 int currentcolumsum = ((int) (base10SumArray[i] * Math.pow(10,base10SumArray.length-1 - i)));
-                System.out.println(BigInteger.valueOf(currentcolumsum));
                 sum=sum.add(BigInteger.valueOf(currentcolumsum));
             }
             return sum;

@@ -45,15 +45,6 @@ public class SumCalculatorTest {
 
     }
 
-    @Test
-    @Parameters(method = "dataCalculateSum")
-    public void calculateSumTest(Integer[] entryArray, BigInteger BigInteger) {
-        testObject.setBase10SumArray(entryArray);
-
-        assertEquals (BigInteger,testObject.calculateSum());
-
-    }
-
     private Object[] dataForInitializeMatrixTest() {
         return new TestData().testCase(new ArrayList<String>(Arrays.asList("001", "002", "-103", "-005")), new int[][]{{0, 0, 1}, {0, 0, 2}, {-1, 0, -3}, {0, 0, -5}})
                 .testCase(new ArrayList<>(Arrays.asList("1", "2", "-3", "-5")), new int[][]{{1}, {2}, {-3}, {-5}})
@@ -63,6 +54,15 @@ public class SumCalculatorTest {
                 .testCase(new ArrayList<>(Arrays.asList("001")), new int[][]{{0, 0, 1}})
                 .testCase(null, null)
                 .getData();
+    }
+
+    @Test
+    @Parameters(method = "dataCalculateSum")
+    public void calculateSumTest(Integer[] entryArray, BigInteger excpectedBigInteger) {
+        testObject.setBase10SumArray(entryArray);
+
+        assertEquals(excpectedBigInteger, testObject.calculateSum());
+
     }
 
     private Object[] dataFillBase10SumTableTest() {
@@ -75,13 +75,12 @@ public class SumCalculatorTest {
                 .testCase(null, null)
                 .getData();
     }
-
     private Object[] dataCalculateSum() {
-        return new TestData().testCase(new int[]{2, 2, 2}, new BigInteger("222"))
-                .testCase(new int[]{1, 0, 0}, new BigInteger("100"))
-                .testCase(new int[]{12, 10, -5}, new BigInteger("1295"))
-                .testCase(new int[]{2}, new BigInteger("2"))
-                .testCase(new int[]{0, 0, 0, 20}, new BigInteger("20"))
+        return new TestData().testCase(new Integer[]{2, 2, 2}, BigInteger.valueOf(222))
+                .testCase(new Integer[]{1, 0, 0},  BigInteger.valueOf(100))
+                .testCase(new Integer[]{12, 10, -5},  BigInteger.valueOf(1295))
+                .testCase(new Integer[]{2},  BigInteger.valueOf(2))
+                .testCase(new Integer[]{0, 0, 0, 20},  BigInteger.valueOf(20))
                 .getData();
 
     }

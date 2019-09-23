@@ -54,7 +54,7 @@ public class ParseStringHandler {
                             }
                             copyList.add(numberAsString);
                         } else {
-                           // throw new InconvertibleToNumberException();
+                            throw new InconvertibleToNumberException();
                         }
                     }
                 }
