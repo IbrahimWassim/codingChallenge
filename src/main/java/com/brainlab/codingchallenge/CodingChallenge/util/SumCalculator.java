@@ -2,101 +2,126 @@ package com.brainlab.codingchallenge.CodingChallenge.util;
 
 import com.brainlab.codingchallenge.CodingChallenge.exceptions.InconvertibleToNumberException;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SumCalculator {
     private ParseStringHandler parseStringHandler;
     private List<String> list;
-    private int[][] baset10Matrix;
-    private Integer[] base10SumArray;
+    private List<Integer> base10SumArray1;
 
-    public BigInteger calculateFinalSum(String stringToParse) throws InconvertibleToNumberException {
+    public String calculateFinalSum(String stringToParse) throws InconvertibleToNumberException {
         parseStringHandler = new ParseStringHandler();
-        this.calculateList(stringToParse);
-        this.initializeMatrix();
-        this.fillBase10SumArray();
-        return calculateSum();
-    }
-
-
-    public void calculateList(String stringToParse) throws InconvertibleToNumberException {
         list = parseStringHandler.stringToNumbersArray(stringToParse);
-
+        this.fillBase10Array();
+        base10SumArray1 = calculateSum(base10SumArray1);
+        return finalSum(base10SumArray1);
     }
 
     /**
-     * fill the matrix from a list of strings that have same length. the column index in the matrix present the base 10 position of the number
-     */
-    public void initializeMatrix() {
-        if (list != null) {
-            if (!list.isEmpty()) {
-                int numbersLength = list.get(0).length();
-                if (list.get(0).charAt(0) == '+' || list.get(0).charAt(0) == '-')
-                    numbersLength--;
-                baset10Matrix = new int[list.size()][numbersLength];
-                for (int i = 0; i < list.size(); i++) {
-                    String numberAsString = list.get(i);
-                    for (int j = 0; j < numbersLength; j++) {
-
-                        switch (list.get(i).charAt(0)) {
-                            case '-':
-                                baset10Matrix[i][j] = Character.getNumericValue(numberAsString.charAt(j + 1)) * (-1);
-                                break;
-                            case '+':
-                                baset10Matrix[i][j] = Character.getNumericValue(numberAsString.charAt(j + 1));
-                                break;
-                            default:
-                                baset10Matrix[i][j] = Character.getNumericValue(numberAsString.charAt(j));
-                                break;
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-
-    public void fillBase10SumArray() {
-        if (baset10Matrix != null) {
-            int sumCol;
-            int cols = baset10Matrix.length;
-            int rows = baset10Matrix[0].length;
-            base10SumArray = new Integer[rows];
-            for (int i = 0; i < rows; i++) {
-                sumCol = 0;
-
-                for (int j = 0; j < cols; j++) {
-                    sumCol += baset10Matrix[j][i];
-                }
-                base10SumArray[i] = Integer.valueOf(sumCol);
-
-            }
-        } else {
-            base10SumArray = null;
-        }
-
-    }
-
-    /**
-     * iterates base10SumArray and calculates the final sum
+     * iterates base10SumArray and makes al the number in base 10 with the same sign by summing the adjacent different signs numbers.
      *
-     * @return sum
+     * @param list of Integers with only one number +/-[0-9]
+     * @return list with the final sum numbers that their position indicates the rank.
      */
-    public BigInteger calculateSum() {
+    public List<Integer> calculateSum(List<Integer> list) {
 
-        if (base10SumArray != null) {
-            BigInteger sum= BigInteger.valueOf(0);
-            for (int i = base10SumArray.length - 1; i >= 0; i--) {
-                int currentcolumsum = ((int) (base10SumArray[i] * Math.pow(10,base10SumArray.length-1 - i)));
-                sum=sum.add(BigInteger.valueOf(currentcolumsum));
-            }
-            return sum;
+        if (this.isSameSignforAllValues(list)) {
+            return list;
         } else {
-            return null;
+            int i = 0;
+            boolean sameSign = true;
+            while (i < list.size() - 2 && sameSign)
+                i++;
+            if (i != list.size()) {
+                int newSum = list.get(i) * 10 + list.get(i + 1);
+                list.set(i, (newSum / 10));
+                list.set(i + 1, (newSum % 10));
+                return calculateSum(list);
+
+            } else {
+                return calculateSum(list);
+            }
+
         }
     }
 
+    /**
+     * Return the final sum as a String
+     *
+     * @param list
+     * @return
+     */
+    private String finalSum(List<Integer> list) {
+        String stringToReturn = "";
+        for (Integer integer : list)
+            stringToReturn += Math.abs(integer) + "";
+
+        if (list.get(0) < 0)
+            return "-" + stringToReturn;
+        return stringToReturn;
+
+    }
+
+    /*
+    just added
+     */
+    public void fillBase10Array() {
+        int numbersLength = StringsUtils.startsWithSign(list.get(0)) ? list.get(0).length() - 1 : list.get(0).length();
+        base10SumArray1 = new ArrayList<>(numbersLength);
+//        if (list.size() > 1) {
+
+        Integer base10Sum = 0;
+        int position;
+        for (position = numbersLength - 1; position >= 0; position--) {
+            base10Sum /= 10;
+            for (int i = 0; i < list.size(); i++) {
+                String numberAsString = list.get(i);
+                int realPosition = (StringsUtils.startsWithSign(numberAsString)) ? position + 1 : position;
+                //ignore to sum zero values
+                if (numberAsString.charAt(realPosition) != '0') {
+                    int inValue = Character.getNumericValue(numberAsString.charAt(realPosition));
+                    if (numberAsString.charAt(0) == '-')
+                        inValue *= -1;
+                    base10Sum += inValue;
+                }
+            }
+
+            base10SumArray1.add(new Integer(base10Sum % 10));
+
+        }
+        while ((base10Sum /= 10) != 0) {
+            base10SumArray1.add(new Integer(base10Sum % 10));
+
+        }
+        Collections.reverse(base10SumArray1);
+    }
+
+    /**
+     * returns true if all the Array list items are with the same sign or not.
+     *
+     * @param list list to check
+     * @return true if  the list's items are with the same sign, false if not
+     */
+    private boolean isSameSignforAllValues(List<Integer> list) {
+        if (list.isEmpty()) {
+            //throw  new
+            return false;
+        } else {
+            if (list.size() == 0)
+                return true;
+            int i = 0;
+            boolean sameSign = true;
+            while (sameSign && i < list.size() - 2) {
+                if ((list.get(i) > 0 && list.get(i) < 0) || (list.get(i) > 0 && list.get(i) < 0)) {
+                    return false;
+                }
+                i++;
+            }
+        }
+        return true;
+    }
 
     public ParseStringHandler getParseStringHandler() {
         return parseStringHandler;
@@ -112,21 +137,5 @@ public class SumCalculator {
 
     public void setList(List<String> list) {
         this.list = list;
-    }
-
-    public int[][] getBaset10Matrix() {
-        return baset10Matrix;
-    }
-
-    public void setBaset10Matrix(int[][] baset10Matrix) {
-        this.baset10Matrix = baset10Matrix;
-    }
-
-    public Integer[] getBase10SumArray() {
-        return base10SumArray;
-    }
-
-    public void setBase10SumArray(Integer[] base10SumArray) {
-        this.base10SumArray = base10SumArray;
     }
 }
