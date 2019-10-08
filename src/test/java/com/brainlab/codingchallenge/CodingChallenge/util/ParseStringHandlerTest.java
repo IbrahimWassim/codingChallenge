@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class ParseStringHandlerTest {
@@ -42,6 +43,13 @@ public class ParseStringHandlerTest {
         assertEquals(expectedNumberInNewFormat, result);
     }
 
+    @Test
+    @Parameters(method = "dataForInputStringValidation")
+    public void validateInputString(String inputString, boolean expectedResult) throws InconvertibleToNumberException {
+        assertEquals(testObject.validateInputString(inputString),expectedResult);
+
+    }
+
     private Object[] dataForFormatStringTest() {
         return new TestData().testCase("123", 5, "00123")
                 .testCase("-2", 5, "-00002")
@@ -54,23 +62,40 @@ public class ParseStringHandlerTest {
         return new TestData()
                 //empty String cases
                 .testCase("", Collections.EMPTY_LIST)
+                .testCase("a random string", null)
                 .testCase(null, Collections.EMPTY_LIST)
-                .testCase(",,", Collections.EMPTY_LIST)
+                .testCase(",,", null)
                 //exception
-                .testCase(" , , ", Collections.EMPTY_LIST)
+                .testCase(" , , ", null)
                 //one element list
-                .testCase("25424", new ArrayList<String>(Arrays.asList("25424")))
-                .testCase("-25424", new ArrayList<String>(Arrays.asList("-25424")))
-                .testCase("+25424", new ArrayList<String>(Arrays.asList("+25424")))
+                .testCase("25424",Arrays.asList("25424"))
+                .testCase("-25424", Arrays.asList("-25424"))
+                .testCase("+25424", Arrays.asList("+25424"))
                 //numbers with length = 1
-                .testCase("1,2,-3,+5", new ArrayList<String>(Arrays.asList("1", "2", "-3", "+5")))
+                .testCase("1,2,-3,+5", Arrays.asList("1", "2", "-3", "+5"))
                 //input with spaces and empty elements
-                .testCase("+1,2  ,-3,+5", new ArrayList<String>(Arrays.asList("+1", "2", "-3", "+5")))
+                .testCase("+1,2  ,-3,+5", Arrays.asList("+1", "2", "-3", "+5"))
 
-                .testCase("1234,-44454410135456,102,563", new ArrayList<String>(Arrays.asList("00000000001234", "-44454410135456", "00000000000102", "00000000000563")))
-                .testCase("+1234,-44454410135456,102,563", new ArrayList<String>(Arrays.asList("+00000000001234", "-44454410135456", "00000000000102", "00000000000563")))
-                .testCase("1234,44454410135456,102,563", new ArrayList<String>(Arrays.asList("00000000001234", "44454410135456", "00000000000102", "00000000000563")))
-                .testCase("1234,-44454410135456,102,563", new ArrayList<String>(Arrays.asList("00000000001234", "-44454410135456", "00000000000102", "00000000000563")))
+                .testCase("1234,-44454410135456,102,563",Arrays.asList("00000000001234", "-44454410135456", "00000000000102", "00000000000563"))
+                .testCase("+1234,-44454410135456,102,563",Arrays.asList("+00000000001234", "-44454410135456", "00000000000102", "00000000000563"))
+                .testCase("1234,44454410135456,102,563",Arrays.asList("00000000001234", "44454410135456", "00000000000102", "00000000000563"))
+                .testCase("1234,-44454410135456,102,563", Arrays.asList("00000000001234", "-44454410135456", "00000000000102", "00000000000563"))
                 .getData();
+    }
+
+    private  Object[] dataForInputStringValidation() {
+        return new TestData()
+                .testCase("a random string", false)
+                .testCase("123", true)
+                .testCase("-123", true)
+                .testCase("-252 3", true)
+                .testCase("-252 3,200114", true)
+                .testCase("-2523, ", false)
+                .testCase("-2523, 5", true)
+                .testCase("  -2523, ,", false)
+                .testCase("  ,, ,", false)
+                .testCase("0000", true)
+                .getData();
+
     }
 }
