@@ -38,7 +38,7 @@ public class CalculatorService {
         }
 
         if (sum == null)
-            return "{ \"sum\" : " + Double.NaN + "}";
-        return "{ \"sum\" : " + sum + "}";
+            return "{ \"sum\" : " + Double.NaN + " }";
+        return "{ \"sum\" : " + sum + " }";
     }
 }
