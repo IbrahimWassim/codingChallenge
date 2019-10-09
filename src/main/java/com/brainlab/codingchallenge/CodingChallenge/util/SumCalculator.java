@@ -6,17 +6,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * uses ParseStringHandler to parse an input String, converts the obtained  arrayList from parsing into a sum.
+ */
 public class SumCalculator {
     private ParseStringHandler parseStringHandler;
     private List<String> list;
-    private List<Integer> base10SumArray1;
+    private List<Integer> base10SumArray;
 
     public String calculateFinalSum(String stringToParse) throws InconvertibleToNumberException {
         parseStringHandler = new ParseStringHandler();
         list = parseStringHandler.stringToNumbersArray(stringToParse);
         this.fillBase10Array();
-        base10SumArray1 = calculateSum(base10SumArray1);
-        return finalSum(base10SumArray1);
+        base10SumArray = calculateSum(base10SumArray);
+        return finalSum(base10SumArray);
     }
 
     /**
@@ -48,13 +51,22 @@ public class SumCalculator {
     }
 
     /**
-     * Return the final sum as a String
+     * Return the final sum as a String by displaying it.
      *
      * @param list
      * @return
      */
     private String finalSum(List<Integer> list) {
         String stringToReturn = "";
+        int i = 0;
+        while (list.get(i) == 0 && i < list.size() - 1)
+            i++;
+        if (i == list.size())
+            return "0";
+        else {
+            list = list.subList(i, list.size());
+        }
+
         for (Integer integer : list)
             stringToReturn += Math.abs(integer) + "";
 
@@ -64,12 +76,12 @@ public class SumCalculator {
 
     }
 
-    /*
-    just added
+    /**
+     * fills an array list with the base 10 numbers that. the list items are between +/-[0-9] (between -9 and 9)
      */
     public void fillBase10Array() {
         int numbersLength = StringsUtils.startsWithSign(list.get(0)) ? list.get(0).length() - 1 : list.get(0).length();
-        base10SumArray1 = new ArrayList<>(numbersLength);
+        base10SumArray = new ArrayList<>(numbersLength);
 //        if (list.size() > 1) {
 
         Integer base10Sum = 0;
@@ -88,14 +100,14 @@ public class SumCalculator {
                 }
             }
 
-            base10SumArray1.add(new Integer(base10Sum % 10));
+            base10SumArray.add(new Integer(base10Sum % 10));
 
         }
         while ((base10Sum /= 10) != 0) {
-            base10SumArray1.add(new Integer(base10Sum % 10));
+            base10SumArray.add(new Integer(base10Sum % 10));
 
         }
-        Collections.reverse(base10SumArray1);
+        Collections.reverse(base10SumArray);
     }
 
     /**
