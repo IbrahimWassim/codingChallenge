@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 
+/**
+ * Web Service that contains  the redirect to business logic of the servie or throw the error to the exception Handler in case of  input error
+ */
 @Service
 public class CalculatorService {
     private static final Logger LOG = LoggerFactory.getLogger(CalculatorService.class);
@@ -35,7 +38,7 @@ public class CalculatorService {
         }
 
         if (sum == null)
-            return "{ \"sum\" : " + Double.NaN + "}";
-        return "{ \"sum\" : " + sum + "}";
+            return "{ \"sum\" : " + Double.NaN + " }";
+        return "{ \"sum\" : " + sum + " }";
     }
 }

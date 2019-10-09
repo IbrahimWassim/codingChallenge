@@ -75,7 +75,6 @@ public class ParseStringHandler {
             } else {
                 numericInputs = Collections.emptyList();
             }
-            System.out.println(numericInputs);
         } else {
             throw new InconvertibleToNumberException();
 

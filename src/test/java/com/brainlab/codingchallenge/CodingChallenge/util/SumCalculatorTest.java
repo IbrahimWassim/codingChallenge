@@ -16,72 +16,55 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
 public class SumCalculatorTest {
-   /* private SumCalculator testObject;
+    private SumCalculator testObject;
 
     @Before
     public void setUp() throws Exception {
         testObject = new SumCalculator();
     }
 
-
     @Test
-    @Parameters(method = "dataForInitializeMatrixTest")
-    public void initializeMatrixTest(List<String> list, int[][] expectedMatrix) {
+    @Parameters(method = "dataForFillBase10Array")
+    public void fillBase10ArrayTest(List<String> list, List<Integer> expectedArray) {
 
         testObject.setList(list);
+        testObject.fillBase10Array();
+        List<Integer> foundList = testObject.getBase10SumArray();
 
-        testObject.initializeMatrix();
-
-        Assert.assertArrayEquals(expectedMatrix, testObject.getBaset10Matrix());
+        assertEquals(expectedArray, foundList);
 
     }
-
     @Test
-    @Parameters(method = "dataFillBase10SumTableTest")
-    public void fillBase10SumArrayTest(int[][] entryMatrix, Integer[] expectedBase10Array) {
-        testObject.setBaset10Matrix(entryMatrix);
-        testObject.fillBase10SumArray();
-        Assert.assertArrayEquals(testObject.getBase10SumArray(), expectedBase10Array);
+    @Parameters(method = "dataForCalculateSum")
+    public void calculateSumTest(List<Integer> list, List<Integer> expectedArray) {
+
+        testObject.setBase10SumArray(list);
+        List<Integer> foundList =   testObject.calculateSum(list);
+        assertEquals(expectedArray, foundList);
 
     }
 
-    private Object[] dataForInitializeMatrixTest() {
-        return new TestData().testCase(new ArrayList<String>(Arrays.asList("001", "002", "-103", "-005")), new int[][]{{0, 0, 1}, {0, 0, 2}, {-1, 0, -3}, {0, 0, -5}})
-                .testCase(new ArrayList<>(Arrays.asList("1", "2", "-3", "-5")), new int[][]{{1}, {2}, {-3}, {-5}})
-                .testCase(new ArrayList<>(Arrays.asList("001", "102", "-003", "-005")), new int[][]{{0, 0, 1}, {1, 0, 2}, {0, 0, -3}, {0, 0, -5}})
-                .testCase(new ArrayList<>(Arrays.asList("000000001", "950000002", "-000000003", "-000000005")), new int[][]{{0, 0, 0, 0, 0, 0, 0, 0, 1}, {9, 5, 0, 0, 0, 0, 0, 0, 2}, {0, 0, 0, 0, 0, 0, 0, 0, -3}, {0, 0, 0, 0, 0, 0, 0, 0, -5}})
-                .testCase(new ArrayList<>(Arrays.asList("+001", "+002", "-103", "-005")), new int[][]{{0, 0, 1}, {0, 0, 2}, {-1, 0, -3}, {0, 0, -5}})
-                .testCase(new ArrayList<>(Arrays.asList("001")), new int[][]{{0, 0, 1}})
-                .testCase(null, null)
-                .getData();
-    }
-
-    @Test
-    @Parameters(method = "dataCalculateSum")
-    public void calculateSumTest(Integer[] entryArray, BigInteger excpectedBigInteger) {
-        testObject.setBase10SumArray(entryArray);
-
-        assertEquals(excpectedBigInteger, testObject.calculateSum());
-
-    }
-
-    private Object[] dataFillBase10SumTableTest() {
-        return new TestData().testCase(new int[][]{{0, 0, 1}, {0, 0, 2}, {-1, 0, -3}, {0, 0, -5}}, new Integer[]{-1, 0, -5})
-                .testCase(new int[][]{{1}, {2}, {-3}, {-5}}, new Integer[]{-5})
-                .testCase(new int[][]{{0, 0, 1}, {1, 0, 2}, {0, 0, -3}, {0, 0, -5}}, new Integer[]{1, 0, -5})
-                .testCase(new int[][]{{0, 0, 0, 0, 0, 0, 0, 0, 1}, {9, 5, 0, 0, 0, 0, 0, 0, 2}, {0, 0, 0, 0, 0, 0, 0, 0, -3}, {0, 0, 0, 0, 0, 0, 0, 0, -5}}, new Integer[]{9, 5, 0, 0, 0, 0, 0, 0, -5})
-                .testCase(new int[][]{{0, 0, 1}, {0, 0, 2}, {-1, 0, -3}, {0, 0, -5}}, new Integer[]{-1, 0, -5})
-                .testCase(new int[][]{{0, 0, 1}}, new Integer[]{0, 0, 1})
-                .testCase(null, null)
-                .getData();
-    }
-    private Object[] dataCalculateSum() {
-        return new TestData().testCase(new Integer[]{2, 2, 2}, BigInteger.valueOf(222))
-                .testCase(new Integer[]{1, 0, 0},  BigInteger.valueOf(100))
-                .testCase(new Integer[]{12, 10, -5},  BigInteger.valueOf(1295))
-                .testCase(new Integer[]{2},  BigInteger.valueOf(2))
-                .testCase(new Integer[]{0, 0, 0, 20},  BigInteger.valueOf(20))
+    private Object[] dataForFillBase10Array() {
+        return new TestData()
+                .testCase((Arrays.asList("0001", "0005", "1500")), (Arrays.asList(1, 5, 0, 6)))
+                .testCase((Arrays.asList("0000", "0000", "0000")), (Arrays.asList(0, 0, 0, 0)))
+                .testCase((Arrays.asList("4444444444444")), (Arrays.asList(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)))
+                .testCase((Arrays.asList("-4444444444444")), (Arrays.asList(-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4)))
+                .testCase((Arrays.asList("-4444444444444", "3333333333333")), (Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)))
+                .testCase((Arrays.asList("-4444444444444")), (Arrays.asList(-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4)))
+                .testCase((Arrays.asList("001", "-500", "060")), (Arrays.asList(-5, 6, 1)))
+                .testCase((Arrays.asList("-001", "-500", "-060")), (Arrays.asList(-5, -6, -1)))
                 .getData();
 
-    }*/
+    }
+
+    private Object[] dataForCalculateSum() {
+        return new TestData()
+                .testCase((Arrays.asList(1, 5, 0, 6)),(Arrays.asList(1, 5, 0, 6)))
+                .testCase((Arrays.asList(0, 0, 0, 0)),(Arrays.asList(0, 0, 0, 0)))
+                .testCase((Arrays.asList(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)),(Arrays.asList(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)))
+                .testCase((Arrays.asList(-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4)),(Arrays.asList(-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4)))
+                .getData();
+
+    }
 }
