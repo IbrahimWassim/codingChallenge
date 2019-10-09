@@ -14,7 +14,6 @@ public class ExceptionThrower {
         InconvertibleToNumberException e = new InconvertibleToNumberException();
         e.setCode(500);
         e.setDescription("Unable to parse  the  input : "+stringToparse);
-        System.out.println("\n\n\n\n\n11111111111111111\n\n\n");
         throw e;
 
     }
