@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
 public class SumCalculatorTest {
-    private SumCalculator testObject;
+   /* private SumCalculator testObject;
 
     @Before
     public void setUp() throws Exception {
@@ -83,5 +83,5 @@ public class SumCalculatorTest {
                 .testCase(new Integer[]{0, 0, 0, 20},  BigInteger.valueOf(20))
                 .getData();
 
-    }
+    }*/
 }

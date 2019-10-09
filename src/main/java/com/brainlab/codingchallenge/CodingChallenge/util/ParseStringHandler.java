@@ -2,6 +2,9 @@ package com.brainlab.codingchallenge.CodingChallenge.util;
 
 
 import com.brainlab.codingchallenge.CodingChallenge.exceptions.InconvertibleToNumberException;
+import com.brainlab.codingchallenge.CodingChallenge.services.impl.CalculatorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +17,8 @@ import java.util.regex.Pattern;
  */
 @Component
 public class ParseStringHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(CalculatorService.class);
+
     private String stringToParse;
     private List<String> numericInputs;
     protected static String COMMA_SEPARATED_NUMBERS_REGEX = "^[+-]?([0-9]+)(,[+-]?([0-9]+))*$";
@@ -71,6 +76,9 @@ public class ParseStringHandler {
                 numericInputs = Collections.emptyList();
             }
             System.out.println(numericInputs);
+        } else {
+            throw new InconvertibleToNumberException();
+
         }
         return numericInputs;
 

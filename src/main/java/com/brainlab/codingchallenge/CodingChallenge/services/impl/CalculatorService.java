@@ -1,5 +1,6 @@
 package com.brainlab.codingchallenge.CodingChallenge.services.impl;
 
+import com.brainlab.codingchallenge.CodingChallenge.exceptions.ExceptionThrower;
 import com.brainlab.codingchallenge.CodingChallenge.exceptions.InconvertibleToNumberException;
 import com.brainlab.codingchallenge.CodingChallenge.util.SumCalculator;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import java.math.BigInteger;
 @Service
 public class CalculatorService {
     private static final Logger LOG = LoggerFactory.getLogger(CalculatorService.class);
+    ExceptionThrower eT = new ExceptionThrower();
 
     private SumCalculator sumCalculator;
 
@@ -20,7 +22,7 @@ public class CalculatorService {
      * @param operandsString
      * @return
      */
-    public String calculateSum(String operandsString) {
+    public String calculateSum(String operandsString) throws InconvertibleToNumberException {
         sumCalculator = new SumCalculator();
 
         String sum = null;
@@ -28,8 +30,8 @@ public class CalculatorService {
             sum = sumCalculator.calculateFinalSum(operandsString);
 
         } catch (InconvertibleToNumberException e) {
-            LOG.error("Error in parsing input String : " + operandsString, e);
-            //e.printStackTrace();
+            e.setDescription("Error in parsing input String : " + operandsString);
+            eT.throwInconvertibleToNumberException("Error in parsing input String : " + operandsString);
         }
 
         if (sum == null)
