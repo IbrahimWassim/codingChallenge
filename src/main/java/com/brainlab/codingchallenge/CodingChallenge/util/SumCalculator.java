@@ -10,9 +10,9 @@ import java.util.List;
  * uses ParseStringHandler to parse an input String, converts the obtained  arrayList from parsing into a sum.
  */
 public class SumCalculator {
-    private ParseStringHandler parseStringHandler;
-    private List<String> list;
-    private List<Integer> base10SumArray;
+    private ParseStringHandler parseStringHandler;// input String to parse
+    private List<String> list;// contains numbers as strings with the same length
+    private List<Integer> base10SumArray;//contains the numbers in base 10 format
 
     public String calculateFinalSum(String stringToParse) throws InconvertibleToNumberException {
         parseStringHandler = new ParseStringHandler();
@@ -126,7 +126,7 @@ public class SumCalculator {
             int i = 0;
             boolean sameSign = true;
             while (sameSign && i < list.size() - 2) {
-                if ((list.get(i) > 0 && list.get(i) < 0) || (list.get(i) > 0 && list.get(i) < 0)) {
+                if ((list.get(i) > 0 && list.get(i+1) < 0) || (list.get(i) > 0 && list.get(i+1) < 0)) {
                     return false;
                 }
                 i++;
@@ -149,5 +149,13 @@ public class SumCalculator {
 
     public void setList(List<String> list) {
         this.list = list;
+    }
+
+    public List<Integer> getBase10SumArray() {
+        return base10SumArray;
+    }
+
+    public void setBase10SumArray(List<Integer> base10SumArray) {
+        this.base10SumArray = base10SumArray;
     }
 }
